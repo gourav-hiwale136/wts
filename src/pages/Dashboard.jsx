@@ -1,33 +1,50 @@
-import React from "react";
-const Dashboard = () => {
-  return (
-    <div>
-      <h2 style={{ color: "#3a4a5c", fontSize: "28px", marginBottom: "30px", fontWeight: "600" }}>
-        Dashboard
-      </h2>
+import { useEffect, useState } from "react";
 
-      {/* Stats */}
-      <div style={{display: "grid",gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",gap: "20px",marginBottom: "30px"}}>
-        <div style={{backgroundColor: "#ffffff",color: "#3a4a5c",padding: "20px",borderRadius: "8px",border: "1px solid #e0e6ed",boxShadow: "0 2px 4px rgba(0, 0, 0, 0.06)"}}>
-          <h3 style={{ margin: 0, color: "#7a8a9c", fontSize: "14px" }}>Total Users</h3>
-          <p style={{ fontSize: "32px", fontWeight: "700", margin: "10px 0 0 0", color: "#4a6a8a" }}>150</p>
-        </div>
+const Dashboard = ({ isLoggedIn }) => {
+  const [user, setUser] = useState(null);
 
-        <div style={{backgroundColor: "#ffffff",color: "#3a4a5c",padding: "20px",borderRadius: "8px",border: "1px solid #e0e6ed",boxShadow: "0 2px 4px rgba(0, 0, 0, 0.06)"}}>
-          <h3 style={{ margin: 0, color: "#7a8a9c", fontSize: "14px" }}>Active Users</h3>
-          <p style={{ fontSize: "32px", fontWeight: "700", margin: "10px 0 0 0", color: "#5a7a7f" }}>100</p>
-        </div>
+  // Update user whenever login state changes
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+  }, [isLoggedIn]);
 
-        <div style={{backgroundColor: "#ffffff",color: "#3a4a5c",padding: "20px",borderRadius: "8px",border: "1px solid #e0e6ed",boxShadow: "0 2px 4px rgba(0, 0, 0, 0.06)"}}>
-          <h3 style={{ margin: 0, color: "#7a8a9c", fontSize: "14px" }}>Growth</h3>
-          <p style={{ fontSize: "32px", fontWeight: "700", margin: "10px 0 0 0", color: "#6a6a9a" }}>1000</p>
-        </div>
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <p className="text-gray-500 text-lg">Loading your dashboard...</p>
       </div>
+    );
+  }
 
-      {/* Welcome Message */}
-      <div style={{backgroundColor: "#ffffff",color: "#3a4a5c",padding: "20px", borderRadius: "8px",border: "1px solid #e0e6ed",boxShadow: "0 2px 4px rgba(0, 0, 0, 0.06)"}}>
-        <h3 style={{ margin: "0 0 10px 0" }}>Welcome to Admin Panel</h3>
-        <p style={{ margin: "0", color: "#7a8a9c" }}>Manage your users and settings from the sidebar menu.</p>
+  return (
+    <div className="min-h-screen bg-slate-100 p-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            Welcome, {user.name}!
+          </h1>
+          <p className="text-gray-600 mb-6">
+            You are successfully logged in. This is your personalized dashboard.
+          </p>
+
+          {/* Example dashboard content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-blue-100 p-6 rounded-lg shadow hover:shadow-lg transition">
+              <h2 className="text-xl font-semibold mb-2">Your Profile</h2>
+              <p className="text-gray-700">Email: {user.email}</p>
+            </div>
+
+            <div className="bg-green-100 p-6 rounded-lg shadow hover:shadow-lg transition">
+              <h2 className="text-xl font-semibold mb-2">Quick Actions</h2>
+              <ul className="text-gray-700 list-disc list-inside">
+                <li>Update your profile</li>
+                <li>View analytics</li>
+                <li>Manage settings</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

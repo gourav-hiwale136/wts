@@ -1,53 +1,58 @@
-const Navbar = ({ toggle }) => {
-  return (
-    <nav
-      style={{
-        backgroundColor: "#ffffff",
-        padding: "15px 20px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderBottom: "1px solid #d0d8e0",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
-        height: "60px"
-      }}
-    >
-      <h1
-        style={{
-          color: "#3a4a5c",
-          fontSize: "24px",
-          margin: 0,
-          fontWeight: "600"
-        }}
-      >
-        Admin Panel
-      </h1>
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-      <button
-        onClick={toggle}
-        style={{
-          backgroundColor: "#e8ecf2",
-          color: "#3a4a5c",
-          border: "1px solid #c5cfd9",
-          padding: "10px 15px",
-          borderRadius: "6px",
-          cursor: "pointer",
-          fontSize: "20px",
-          fontWeight: "bold",
-          transition: "0.3s"
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.backgroundColor = "#dce2ea";
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.backgroundColor = "#e8ecf2";
-        }}
-      >
-        ☰
-      </button>
+const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Load user from localStorage whenever login state changes
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setCurrentUser(user);
+  }, [isLoggedIn]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
+  return (
+    <nav className="bg-white shadow p-4 flex justify-between items-center">
+      <div className="text-xl font-bold text-blue-600 cursor-pointer" onClick={() => navigate("/")}>
+        AdminPanal
+      </div>
+
+      {isLoggedIn && currentUser ? (
+        <div className="flex items-center space-x-4">
+          <div className="text-gray-700">
+            <span className="font-semibold">{currentUser.name}</span>{" "}
+            <span className="text-sm text-gray-500">({currentUser.role})</span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+          >
+            Logout
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => navigate("/login")}
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Login
+          </button>
+          <button
+            onClick={() => navigate("/register")}
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Register
+          </button>
+        </div>
+      )}
     </nav>
   );
 };

@@ -28,27 +28,32 @@ const Register = () => {
       return;
     }
 
-    const newUser = {
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      password,
-    };
-
     try {
+      // Get existing users or create an empty array
       const users = JSON.parse(localStorage.getItem("users")) || [];
 
-      if (users.some((u) => u.email === newUser.email)) {
+      // Check if email already exists
+      if (users.some((u) => u.email === email.trim().toLowerCase())) {
         alert("❌ Email already registered! Please login.");
         setLoading(false);
         return;
       }
 
+      // Assign role: first user is admin, rest are normal users
+      const role = users.length === 0 ? "admin" : "user";
+
+      const newUser = {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        role, // assign role
+      };
+
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
-      console.log("Users after registration:", users);
 
       setLoading(false);
-      alert("✅ Account created! Please login now.");
+      alert(`✅ Account created! You are registered as "${role}". Please login now.`);
       navigate("/login");
     } catch (err) {
       console.error(err);

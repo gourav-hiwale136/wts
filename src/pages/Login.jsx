@@ -12,33 +12,29 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
+  setTimeout(() => {
+    setLoading(false);
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-      // ✅ Get all registered users
-      const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(
+      (u) =>
+        u.email === formData.email.trim().toLowerCase() &&
+        u.password === formData.password
+    );
 
-      // ✅ Find matching user
-      const user = users.find(
-        (u) =>
-          u.email === formData.email && u.password === formData.password
-      );
-
-      if (user) {
-        // ✅ Successful login
-        localStorage.setItem("token", "123456");
-        localStorage.setItem("user", JSON.stringify(user));
-        setIsLoggedIn(true);
-        navigate("/dashboard");
-      } else {
-        alert("❌ Invalid credentials! Make sure you registered first.");
-      }
-    }, 1000);
-  };
-
+    if (user) {
+      localStorage.setItem("token", "123456");
+      localStorage.setItem("user", JSON.stringify(user));
+      setIsLoggedIn(true);
+      navigate("/dashboard");
+    } else {
+      alert("❌ Invalid credentials! Make sure you registered first.");
+    }
+  }, 1000);
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
@@ -68,7 +64,7 @@ const Login = ({ setIsLoggedIn }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-blue-400 font-semibold flex items-center justify-center transition-all"
+            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-blue-400 font-semibold flex items-center justify-center"
           >
             {loading ? "⏳ Logging in..." : "Login"}
           </button>

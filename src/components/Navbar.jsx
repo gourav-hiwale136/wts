@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Load user from localStorage whenever login state changes
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setCurrentUser(user);
@@ -20,15 +19,20 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
   return (
     <nav className="bg-white shadow p-4 flex justify-between items-center">
-      <div className="text-xl font-bold text-blue-600 cursor-pointer" onClick={() => navigate("/")}>
-        AdminPanal
+      <div
+        className="text-xl font-bold text-blue-600 cursor-pointer"
+        onClick={() => navigate("/dashboard")}
+      >
+        AdminPanel
       </div>
 
       {isLoggedIn && currentUser ? (
         <div className="flex items-center space-x-4">
           <div className="text-gray-700">
-            <span className="font-semibold">{currentUser.name}</span>{" "}
-            <span className="text-sm text-gray-500">({currentUser.role})</span>
+            <span className="font-semibold">{currentUser?.name}</span>{" "}
+            {currentUser.role && (
+              <span className="text-sm text-gray-500">({currentUser.role})</span>
+            )}
           </div>
           <button
             onClick={handleLogout}
